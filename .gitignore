@@ -1,0 +1,10 @@
+.vscode
+.cache
+.claude
+.DS_Store
+build
+*.img
+*.iso
+*.objdump
+*.log
+notes

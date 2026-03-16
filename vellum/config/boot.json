@@ -1,0 +1,38 @@
+{
+    "timezone": 32400,
+    "rtc_utc": true,
+    "menu": {
+        "title": "Boot Menu",
+        "timeout": 5,
+        "default": 0,
+        "options": [
+            {
+                "name": "Boot from next device",
+                "script": "bootnext"
+            },
+            {
+                "name": "Start shell",
+                "submenu": {
+                    "title": "Start shell",
+                    "timeout": 5,
+                    "default": 0,
+                    "options": [
+                        {
+                            "name": "CLI shell",
+                            "script": "shell"
+                        },
+                        {   
+                            "name": "GUI shell",
+                            "script": [
+                                "usefont boot:/unifont.bfn",
+                                "vmode 640x480x24",
+                                "loadmodule boot:/modules/guishell.mod",
+                                "guishell"
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
