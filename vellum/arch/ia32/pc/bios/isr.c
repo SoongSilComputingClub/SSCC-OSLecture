@@ -16,16 +16,41 @@
 
 #define MODULE_NAME "isr"
 
-#define DECLARE_ISRxy(x, y) extern void _pc_isr_##x##y(void);
+#define DECLARE_ISRxy(x, y) extern void _pc_isr_##x##y(void)
 #define DECLARE_ISRx(x)                                                                            \
-    DECLARE_ISRxy(x, 0) DECLARE_ISRxy(x, 1) DECLARE_ISRxy(x, 2) DECLARE_ISRxy(x, 3)                \
-        DECLARE_ISRxy(x, 4) DECLARE_ISRxy(x, 5) DECLARE_ISRxy(x, 6) DECLARE_ISRxy(x, 7)            \
-            DECLARE_ISRxy(x, 8) DECLARE_ISRxy(x, 9) DECLARE_ISRxy(x, a) DECLARE_ISRxy(x, b)        \
-                DECLARE_ISRxy(x, c) DECLARE_ISRxy(x, d) DECLARE_ISRxy(x, e) DECLARE_ISRxy(x, f)
+    DECLARE_ISRxy(x, 0);                                                                           \
+    DECLARE_ISRxy(x, 1);                                                                           \
+    DECLARE_ISRxy(x, 2);                                                                           \
+    DECLARE_ISRxy(x, 3);                                                                           \
+    DECLARE_ISRxy(x, 4);                                                                           \
+    DECLARE_ISRxy(x, 5);                                                                           \
+    DECLARE_ISRxy(x, 6);                                                                           \
+    DECLARE_ISRxy(x, 7);                                                                           \
+    DECLARE_ISRxy(x, 8);                                                                           \
+    DECLARE_ISRxy(x, 9);                                                                           \
+    DECLARE_ISRxy(x, a);                                                                           \
+    DECLARE_ISRxy(x, b);                                                                           \
+    DECLARE_ISRxy(x, c);                                                                           \
+    DECLARE_ISRxy(x, d);                                                                           \
+    DECLARE_ISRxy(x, e);                                                                           \
+    DECLARE_ISRxy(x, f);
 
-DECLARE_ISRx(0) DECLARE_ISRx(1) DECLARE_ISRx(2) DECLARE_ISRx(3) DECLARE_ISRx(4) DECLARE_ISRx(5) DECLARE_ISRx(6) DECLARE_ISRx(
-    7
-) DECLARE_ISRx(8) DECLARE_ISRx(9) DECLARE_ISRx(a) DECLARE_ISRx(b) DECLARE_ISRx(c) DECLARE_ISRx(d) DECLARE_ISRx(e) DECLARE_ISRx(f)
+DECLARE_ISRx(0);
+DECLARE_ISRx(1);
+DECLARE_ISRx(2);
+DECLARE_ISRx(3);
+DECLARE_ISRx(4);
+DECLARE_ISRx(5);
+DECLARE_ISRx(6);
+DECLARE_ISRx(7);
+DECLARE_ISRx(8);
+DECLARE_ISRx(9);
+DECLARE_ISRx(a);
+DECLARE_ISRx(b);
+DECLARE_ISRx(c);
+DECLARE_ISRx(d);
+DECLARE_ISRx(e);
+DECLARE_ISRx(f);
 
 #define SET_INT_ENTRY(num)                                                                         \
     _pc_idt[0x##num] = (struct VlA_IdtEntry)                                                       \
@@ -41,7 +66,7 @@ DECLARE_ISRx(0) DECLARE_ISRx(1) DECLARE_ISRx(2) DECLARE_ISRx(3) DECLARE_ISRx(4) 
         .attributes = 0x8F, .offset_high = ((uint32_t)_pc_isr_##num >> 16) & 0xFFFF,               \
     }
 
-    struct VlA_IdtEntry _pc_idt[256];
+struct VlA_IdtEntry _pc_idt[256];
 struct isr_handler *_pc_isr_table[256];
 
 void VlIntP_Init(void)

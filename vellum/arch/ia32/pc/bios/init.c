@@ -91,7 +91,9 @@ static status_t init_pma(void)
     base_paddr = 0;
     limit_paddr = 0;
     do {
-        VlBiosP_QueryMemoryMap(&smap_cursor, &smap_entry, sizeof(smap_entry));
+        status = VlBiosP_QueryMemoryMap(&smap_cursor, &smap_entry, sizeof(smap_entry));
+        if (!CHECK_SUCCESS(status)) return status;
+
         smap_base = (uint64_t)smap_entry.base_addr_high << 32 | smap_entry.base_addr_low;
         smap_size = (uint64_t)smap_entry.length_high << 32 | smap_entry.length_low;
 
@@ -112,7 +114,9 @@ static status_t init_pma(void)
     /* mark smaller reserved area inside the previous area */
     smap_cursor = 0;
     do {
-        VlBiosP_QueryMemoryMap(&smap_cursor, &smap_entry, sizeof(smap_entry));
+        status = VlBiosP_QueryMemoryMap(&smap_cursor, &smap_entry, sizeof(smap_entry));
+        if (!CHECK_SUCCESS(status)) return status;
+
         smap_base = (uint64_t)smap_entry.base_addr_high << 32 | smap_entry.base_addr_low;
         smap_size = (uint64_t)smap_entry.length_high << 32 | smap_entry.length_low;
 

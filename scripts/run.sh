@@ -60,7 +60,7 @@ QEMU_MACHINE=$1
 
 case $QEMU_MACHINE in
     isapc-ia32)
-        QEMU_ARCH=ia32
+        QEMU_ARCH=i386
         CPU_TYPE=486
         MACHINE_TYPE=isapc
         DEVICES=(
@@ -85,7 +85,7 @@ case $QEMU_MACHINE in
         fi
         ;;
     q35-ia32)
-        QEMU_ARCH=ia32
+        QEMU_ARCH=i386
         MACHINE_TYPE=q35
         DEVICES=(
             "nvme,drive=fd0,serial=1234"
@@ -112,7 +112,7 @@ case $QEMU_MACHINE in
         fi
         ;;
     pc-ia32)
-        QEMU_ARCH=ia32
+        QEMU_ARCH=i386
         MACHINE_TYPE=pc
         DEVICES=(
             "ide-hd,bus=ide.0,drive=fd0"
