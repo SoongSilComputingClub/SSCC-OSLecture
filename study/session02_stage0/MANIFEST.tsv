@@ -1,0 +1,5 @@
+root_CMakeLists.txt	CMakeLists.txt
+vellum_CMakeLists.txt	vellum/CMakeLists.txt
+bios_CMakeLists.txt	vellum/arch/ia32/pc/bios/CMakeLists.txt
+mkdisk.sh	scripts/mkdisk.sh
+stage1.S	vellum/arch/ia32/pc/bios/stage1.S

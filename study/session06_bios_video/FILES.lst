@@ -1,0 +1,6 @@
+# BIOS helper wrappers and firmware-side shell commands start to accumulate.
+vellum/arch/ia32/pc/bios/bios
+vellum/arch/ia32/pc/bios/shell
+vellum/arch/ia32/pc/bios/pic.c
+vellum/arch/ia32/pc/bios/panic.c
+vellum/arch/ia32/pc/bios/power.c

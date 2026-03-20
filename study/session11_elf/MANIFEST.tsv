@@ -1,0 +1,10 @@
+root_CMakeLists.txt	CMakeLists.txt
+bios_CMakeLists.txt	vellum/arch/ia32/pc/bios/CMakeLists.txt
+vellum_CMakeLists.txt	vellum/CMakeLists.txt
+init.c	vellum/arch/ia32/pc/bios/init.c
+main.c	vellum/core/main.c
+shell.c	vellum/shell/shell.c
+mm.c	vellum/mm/mm.c
+fs.c	vellum/filesystem/fs.c
+fat.c	vellum/filesystem/fat/fat.c
+elf.c	vellum/elf/elf.c

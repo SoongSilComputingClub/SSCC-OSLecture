@@ -77,6 +77,63 @@ static const struct cookie_io_functions early_stddbg_io = {
     .write = early_stddbg_write,
 };
 
+struct mbr_partition_entry_fallback {
+    uint8_t status;
+    uint8_t chs_start[3];
+    uint8_t type;
+    uint8_t chs_end[3];
+    uint32_t base_lba;
+    uint32_t sector_count;
+} __packed;
+
+struct mbr_sector_fallback {
+    uint8_t boot_code[446];
+    struct mbr_partition_entry_fallback partition_entries[4];
+    uint16_t boot_signature;
+} __packed;
+
+#define MBR_BOOT_SIGNATURE 0xAA55
+
+static status_t find_boot_partition_device(
+    struct device *diskdev,
+    const struct block_interface *blki,
+    const uint8_t *sect0,
+    struct device **partdevout
+)
+{
+    status_t status;
+    struct device_driver *partdrv;
+    const struct mbr_sector_fallback *mbr = (const struct mbr_sector_fallback *)sect0;
+
+    (void)blki;
+
+    if (mbr->boot_signature != MBR_BOOT_SIGNATURE) {
+        return STATUS_INVALID_SIGNATURE;
+    }
+
+    status = VlDev_FindDriver("part", &partdrv);
+    if (!CHECK_SUCCESS(status)) return status;
+
+    for (size_t i = 0; i < ARRAY_SIZE(mbr->partition_entries); ++i) {
+        const struct mbr_partition_entry_fallback *entry = &mbr->partition_entries[i];
+        struct resource res[] = {
+            {
+                .type = RT_LBA,
+                .base = entry->base_lba,
+                .limit = entry->base_lba + entry->sector_count - 1,
+                .flags = 0,
+            },
+        };
+
+        if (!entry->type || !entry->sector_count) continue;
+        if (entry->base_lba != _pc_boot_part_base) continue;
+
+        return partdrv->probe(partdevout, partdrv, diskdev, res, ARRAY_SIZE(res));
+    }
+
+    return STATUS_ENTRY_NOT_FOUND;
+}
+
 static status_t init_pma(void)
 {
     status_t status;
@@ -488,6 +545,13 @@ status_t mount_boot_filesystem(void)
         if (!CHECK_SUCCESS(status)) continue;
 
         if (memcmp(_pc_boot_sector, sect0, sizeof(sect0)) == 0) break;
+
+        struct device *partdev = NULL;
+        status = find_boot_partition_device(bootdisk, blki, sect0, &partdev);
+        if (CHECK_SUCCESS(status) && partdev) {
+            bootdisk = partdev;
+            break;
+        }
     }
 
     if (!bootdisk) return STATUS_BOOT_DEVICE_INACCESSIBLE;

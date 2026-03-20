@@ -1,0 +1,4 @@
+bios_CMakeLists.txt	vellum/arch/ia32/pc/bios/CMakeLists.txt
+init.c	vellum/arch/ia32/pc/bios/init.c
+start_video.c	vellum/arch/ia32/pc/bios/bios/video.c
+vmode.c	vellum/shell/commands/vmode.c

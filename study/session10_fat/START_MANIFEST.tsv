@@ -1,0 +1,4 @@
+bios_CMakeLists.txt	vellum/arch/ia32/pc/bios/CMakeLists.txt
+init.c	vellum/arch/ia32/pc/bios/init.c
+fs.c	vellum/filesystem/fs.c
+start_fat.c	vellum/filesystem/fat/fat.c

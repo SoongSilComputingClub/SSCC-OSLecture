@@ -1,0 +1,8 @@
+# Shell framework and commands become part of the student tree here.
+vellum/shell
+vellum/lib/getopt
+vellum/lib/liballoc
+vellum/debug/log.c
+vellum/device/hid
+vellum/arch/ia32/pc/bios/isr.c
+vellum/arch/ia32/pc/bios/isr.S

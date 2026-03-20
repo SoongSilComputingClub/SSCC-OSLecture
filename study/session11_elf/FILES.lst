@@ -1,0 +1,34 @@
+# Final-stage starter: most remaining subsystems are now visible, with ELF
+# still left as the primary student task for this week.
+vellum/elf
+vellum/core
+vellum/debug
+vellum/encoding
+vellum/module
+vellum/modules
+vellum/acpi
+vellum/pci
+vellum/json
+vellum/lib
+vellum/arch/ia32/cpufeatures.c
+vellum/device/hid
+vellum/device/rtc
+vellum/arch/ia32/pc/bios/acpi
+vellum/config
+vellum/exported_symbols.txt
+vellum/unifont.hex
+vellum/config.h.in
+vellum/arch/CMakeLists.txt
+vellum/arch/ia32/CMakeLists.txt
+vellum/arch/ia32/setjmp.S
+vellum/arch/ia32/pc/CMakeLists.txt
+vellum/arch/ia32/pc/bios/bios/CMakeLists.txt
+vellum/arch/ia32/pc/bios/apm
+vellum/arch/ia32/pc/bios/pci
+vellum/arch/ia32/pc/bios/shell
+vellum/arch/ia32/pc/bios/vbe
+vellum/device/char/CMakeLists.txt
+vellum/device/char/ieee1284_isa.c
+vellum/device/usb
+disk
+tools

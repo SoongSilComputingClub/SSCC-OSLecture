@@ -1,0 +1,4 @@
+bios_CMakeLists.txt	vellum/arch/ia32/pc/bios/CMakeLists.txt
+init.c	vellum/arch/ia32/pc/bios/init.c
+main.c	vellum/core/main.c
+shell.c	vellum/shell/shell.c

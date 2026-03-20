@@ -1,0 +1,213 @@
+cmake_minimum_required(VERSION 3.13)
+
+add_executable(fdboot)
+set_target_properties(fdboot PROPERTIES SUFFIX ".elf")
+target_compile_options(fdboot PUBLIC
+    $<$<COMPILE_LANGUAGE:C,ASM>:
+        -Werror
+        -Wall
+        -Wno-unused-function
+        -pedantic
+        -pedantic-errors
+    >
+)
+target_sources(fdboot PRIVATE fdboot.S)
+target_link_options(fdboot PUBLIC -T "${CMAKE_CURRENT_SOURCE_DIR}/ldscript_vbr.lds")
+set_target_properties(fdboot PROPERTIES LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/ldscript_vbr.lds")
+add_custom_target(fdboot_execbin ALL
+    COMMAND ${CMAKE_OBJCOPY} -O binary "$<TARGET_FILE:fdboot>" fdboot.bin
+    DEPENDS fdboot
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    COMMENT "Creating fdboot binary"
+)
+
+add_executable(mbrboot)
+set_target_properties(mbrboot PROPERTIES SUFFIX ".elf")
+target_compile_options(mbrboot PUBLIC
+    $<$<COMPILE_LANGUAGE:C,ASM>:
+        -Werror
+        -Wall
+        -Wno-unused-function
+        -pedantic
+        -pedantic-errors
+    >
+)
+target_sources(mbrboot PRIVATE mbrboot.S)
+target_link_options(mbrboot PUBLIC -T "${CMAKE_CURRENT_SOURCE_DIR}/ldscript_vbr.lds")
+set_target_properties(mbrboot PROPERTIES LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/ldscript_vbr.lds")
+add_custom_target(mbrboot_execbin ALL
+    COMMAND ${CMAKE_OBJCOPY} -O binary "$<TARGET_FILE:mbrboot>" mbrboot.bin
+    DEPENDS mbrboot
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    COMMENT "Creating mbrboot binary"
+)
+
+add_executable(stage1)
+set_target_properties(stage1 PROPERTIES SUFFIX ".elf")
+target_compile_features(stage1 PUBLIC c_std_11)
+target_compile_options(stage1 PUBLIC
+    $<$<COMPILE_LANGUAGE:C,ASM>:
+        -Werror
+        -Wall
+        -Wno-unused-function
+        -pedantic
+        -pedantic-errors
+        -fno-function-sections
+        -fno-data-sections
+    >
+)
+target_link_libraries(stage1 gcc)
+target_include_directories(stage1 PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(stage1 PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(stage1 PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../..")
+target_include_directories(stage1 PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../include")
+target_include_directories(stage1 PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../../include")
+target_include_directories(stage1 PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../../lib/getopt/include")
+target_include_directories(stage1 PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../../lib/liballoc/include")
+target_sources(stage1 PRIVATE stage1.S stage1.c ../../cpu_mode.S bios/bioscall.S bios/disk.c bios/video.c)
+target_link_options(stage1 PUBLIC -T "${CMAKE_CURRENT_SOURCE_DIR}/ldscript_stage1.lds")
+set_target_properties(stage1 PROPERTIES LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/ldscript_stage1.lds")
+add_custom_target(stage1_execbin ALL
+    COMMAND ${CMAKE_OBJCOPY} -O binary "$<TARGET_FILE:stage1>" stage1.bin
+    DEPENDS stage1
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    COMMENT "Creating stage1 binary"
+)
+
+add_dependencies(vellum stage1)
+target_include_directories(vellum PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(vellum PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(vellum PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../..")
+target_include_directories(vellum PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../include")
+target_include_directories(vellum PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../../include")
+target_include_directories(vellum PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../../lib/getopt/include")
+target_include_directories(vellum PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../../lib/liballoc/include")
+target_sources(vellum PRIVATE
+    start.S
+    init.c
+    isr.c
+    isr.S
+    panic.c
+    pic.c
+    power.c
+    ../../../../core/main.c
+    ../../../../core/path.c
+    gdt.c
+    bios/keyboard.c
+    bios/mem.c
+    bios/misc.c
+    bios/video.c
+    ../../../../mm/mm.c
+    ../../../../device/device.c
+    ../../../../device/char/uart_isa.c
+    ../../../../device/hid/i8042.c
+    ../../../../device/hid/ps2_keyboard.c
+    ../../../../device/block/ata.c
+    ../../../../device/block/atapi.c
+    ../../../../device/block/fdc_isa.c
+    ../../../../device/block/floppy.c
+    ../../../../device/block/ide_isa.c
+    ../../../../device/block/part/gpt.c
+    ../../../../device/block/part/mbr.c
+    ../../../../device/block/part/part.c
+    ../../../../debug/log.c
+    ../../../../encoding/cp437.c
+    ../../../../json/json.c
+    ../../../../filesystem/fs.c
+    ../../../../font/font.c
+    ../../../../stdc/ctype/ctype.c
+    ../../../../stdc/string/memcmp.c
+    ../../../../stdc/string/memset.c
+    ../../../../stdc/string/memcpy.c
+    ../../../../stdc/string/memmove.c
+    ../../../../stdc/string/mempcpy.c
+    ../../../../stdc/string/stpncpy.c
+    ../../../../stdc/string/strchr.c
+    ../../../../stdc/string/strcspn.c
+    ../../../../stdc/string/strerror.c
+    ../../../../stdc/string/strncat.c
+    ../../../../stdc/string/strncmp.c
+    ../../../../stdc/string/strncpy.c
+    ../../../../stdc/string/strnlen.c
+    ../../../../stdc/string/strrchr.c
+    ../../../../stdc/string/strtok.c
+    ../../../../stdc/errno/errno.c
+    ../../../../stdc/stdio/stdio.c
+    ../../../../stdc/stdio/cprintf.c
+    ../../../../stdc/stdio/vcprintf.c
+    ../../../../stdc/stdio/fclose.c
+    ../../../../stdc/stdio/fflush.c
+    ../../../../stdc/stdio/fgetc.c
+    ../../../../stdc/stdio/fgets.c
+    ../../../../stdc/stdio/fopen.c
+    ../../../../stdc/stdio/freopencookie.c
+    ../../../../stdc/stdio/freopendevice.c
+    ../../../../stdc/stdio/fread.c
+    ../../../../stdc/stdio/fseek.c
+    ../../../../stdc/stdio/ftell.c
+    ../../../../stdc/stdio/fwrite.c
+    ../../../../stdc/stdio/fputc.c
+    ../../../../stdc/stdio/fputs.c
+    ../../../../stdc/stdio/putc.c
+    ../../../../stdc/stdio/putchar.c
+    ../../../../stdc/stdio/puts.c
+    ../../../../stdc/stdio/printf.c
+    ../../../../stdc/stdio/fprintf.c
+    ../../../../stdc/stdio/snprintf.c
+    ../../../../stdc/stdio/sprintf.c
+    ../../../../stdc/stdio/sscanf.c
+    ../../../../stdc/stdio/vprintf.c
+    ../../../../stdc/stdio/vfprintf.c
+    ../../../../stdc/stdio/vsnprintf.c
+    ../../../../stdc/stdio/vsprintf.c
+    ../../../../stdc/stdlib/abort.c
+    ../../../../stdc/stdlib/abs.c
+    ../../../../stdc/stdlib/atoi.c
+    ../../../../stdc/stdlib/labs.c
+    ../../../../stdc/stdlib/qsort.c
+    ../../../../stdc/stdlib/rand.c
+    ../../../../stdc/stdlib/strndup.c
+    ../../../../stdc/stdlib/strtod.c
+    ../../../../stdc/stdlib/strtol.c
+    ../../../../stdc/stdlib/strtoll.c
+    ../../../../stdc/stdlib/strtoul.c
+    ../../../../stdc/stdlib/strtoull.c
+    ../../../../lib/getopt/getopt.c
+    ../../../../lib/liballoc/liballoc.c
+    ../../../../lib/liballoc/platform.c
+    ../../../../shell/parse.c
+    ../../../../shell/readline.c
+    ../../../../shell/shell.c
+    ../../../../shell/variable.c
+    ../../../../shell/commands/clear.c
+    ../../../../shell/commands/cpuid.c
+    ../../../../shell/commands/echo.c
+    ../../../../shell/commands/in.c
+    ../../../../shell/commands/jump.c
+    ../../../../shell/commands/lsdev.c
+    ../../../../shell/commands/mem.c
+    ../../../../shell/commands/out.c
+    ../../../../shell/commands/poweroff.c
+    ../../../../shell/commands/read.c
+    ../../../../shell/commands/reboot.c
+    ../../../../shell/commands/testtty.c
+    ../../../../shell/commands/vmode.c
+    ../../../../shell/commands/write.c
+    ../../../../device/video/vga.c
+    ../../../../device/video/vconsole.c
+    ../../../../device/char/ansiterm.c
+    ../../../../stdc/wchar/wcwidth.c
+)
+target_link_options(vellum PUBLIC
+    -T "${CMAKE_CURRENT_SOURCE_DIR}/ldscript.lds"
+    -Wl,--just-symbols=$<TARGET_FILE:stage1>
+)
+set_target_properties(vellum PROPERTIES
+    LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/ldscript.lds;${CMAKE_CURRENT_BINARY_DIR}/stage1.elf"
+)
+add_custom_target(vellum_execbin ALL
+    COMMAND ${CMAKE_OBJCOPY} -O binary "$<TARGET_FILE:vellum>" vellum.bin
+    DEPENDS vellum
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    COMMENT "Creating vellum executable binary"
+)

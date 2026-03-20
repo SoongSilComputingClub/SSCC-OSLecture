@@ -1,0 +1,6 @@
+# Core device subsystem files join the tree here.
+vellum/device/CMakeLists.txt
+vellum/device/device.c
+vellum/device/char/CMakeLists.txt
+vellum/device/char/debugout.c
+vellum/device/char/uart_isa.c

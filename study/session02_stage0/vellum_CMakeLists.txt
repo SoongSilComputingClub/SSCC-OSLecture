@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.13)
+cmake_policy(SET CMP0076 NEW)
+
+project("vellum-stage0" LANGUAGES C ASM)
+
+add_subdirectory(arch/ia32/pc/bios)

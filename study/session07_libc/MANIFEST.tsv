@@ -1,0 +1,7 @@
+bios_CMakeLists.txt	vellum/arch/ia32/pc/bios/CMakeLists.txt
+init.c	vellum/arch/ia32/pc/bios/init.c
+memset.c	vellum/stdc/string/memset.c
+memcpy.c	vellum/stdc/string/memcpy.c
+memmove.c	vellum/stdc/string/memmove.c
+strnlen.c	vellum/stdc/string/strnlen.c
+vcprintf.c	vellum/stdc/stdio/vcprintf.c

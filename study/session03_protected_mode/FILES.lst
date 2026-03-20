@@ -1,0 +1,15 @@
+cmake/ia32/Toolchain.cmake
+vellum/include
+vellum/arch/ia32/include
+vellum/arch/ia32/cpu_mode.S
+vellum/arch/ia32/pc/bios/include
+vellum/arch/ia32/pc/bios/fdboot.S
+vellum/arch/ia32/pc/bios/ldscript.lds
+vellum/arch/ia32/pc/bios/ldscript_stage1.lds
+vellum/arch/ia32/pc/bios/ldscript_vbr.lds
+vellum/arch/ia32/pc/bios/mbrboot.S
+vellum/arch/ia32/pc/bios/start.S
+vellum/arch/ia32/pc/bios/bios/bioscall.S
+vellum/arch/ia32/pc/bios/bios/disk.c
+vellum/arch/ia32/pc/bios/bios/video.c
+vellum/filesystem/fat/fat.h

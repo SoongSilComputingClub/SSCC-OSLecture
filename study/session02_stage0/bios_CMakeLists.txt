@@ -1,0 +1,33 @@
+cmake_minimum_required(VERSION 3.13)
+
+function(add_boot_binary target_name source_name linker_script output_name)
+    add_executable(${target_name})
+    set_target_properties(${target_name} PROPERTIES SUFFIX ".elf")
+    target_compile_options(${target_name} PUBLIC
+        $<$<COMPILE_LANGUAGE:C,ASM>:
+            -Werror
+            -Wall
+            -Wno-unused-function
+            -pedantic
+            -pedantic-errors
+        >
+    )
+    target_sources(${target_name} PRIVATE ${source_name})
+    target_link_options(${target_name} PUBLIC -T "${CMAKE_CURRENT_SOURCE_DIR}/${linker_script}")
+    set_target_properties(${target_name} PROPERTIES LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${linker_script}")
+
+    if ("${target_name}" STREQUAL "stage1")
+        target_link_libraries(${target_name} gcc)
+    endif()
+
+    add_custom_target(${target_name}_execbin ALL
+        COMMAND ${CMAKE_OBJCOPY} -O binary "$<TARGET_FILE:${target_name}>" "${output_name}"
+        DEPENDS ${target_name}
+        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+        COMMENT "Creating ${target_name} binary"
+    )
+endfunction()
+
+add_boot_binary(fdboot fdboot.S ldscript_vbr.lds fdboot.bin)
+add_boot_binary(mbrboot mbrboot.S ldscript_vbr.lds mbrboot.bin)
+add_boot_binary(stage1 stage1.S ldscript_stage1.lds stage1.bin)

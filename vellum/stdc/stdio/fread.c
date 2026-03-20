@@ -21,9 +21,10 @@ size_t fread(void *__restrict ptr, size_t size, size_t count, FILE *__restrict s
             break;
         case 3:
             cookie_result = stream->cookie.io_funcs.read(stream->cookie.cookie, ptr, size);
-            if (cookie_result != count) goto end;
+            if (cookie_result != (ssize_t)size) goto end;
+            break;
         default:
-            return -1;
+            goto end;
         }
         read_count++;
         ptr = (uint8_t *)ptr + size;

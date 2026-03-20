@@ -1,0 +1,5 @@
+cmake/ia32/Toolchain.cmake
+vellum/arch/ia32/pc/bios/fdboot.S
+vellum/arch/ia32/pc/bios/ldscript_stage1.lds
+vellum/arch/ia32/pc/bios/ldscript_vbr.lds
+vellum/arch/ia32/pc/bios/mbrboot.S

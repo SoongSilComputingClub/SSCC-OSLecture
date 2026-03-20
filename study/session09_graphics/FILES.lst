@@ -1,0 +1,12 @@
+# Graphics-facing pieces are added on top of the text shell.
+vellum/device/char/ansiterm.c
+vellum/device/block
+vellum/device/video
+vellum/encoding
+vellum/font
+vellum/json
+vellum/debug/log.c
+vellum/core/path.c
+vellum/filesystem/fs.c
+vellum/arch/ia32/pc/bios/isr.c
+vellum/arch/ia32/pc/bios/isr.S

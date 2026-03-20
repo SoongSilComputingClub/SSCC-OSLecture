@@ -2,8 +2,6 @@
 
 #include <stdint.h>
 
-#include <uacpi/sleep.h>
-
 #include <vellum/arch/interrupt.h>
 #include <vellum/arch/intrinsics/idt.h>
 #include <vellum/arch/io.h>

@@ -9,7 +9,6 @@
 #include <vellum/arch/intrinsics/rdtsc.h>
 #include <vellum/arch/io.h>
 
-#include <vellum/plat/instruction.h>
 #include <vellum/plat/isr.h>
 
 #include <vellum/device.h>

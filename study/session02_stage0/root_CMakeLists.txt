@@ -1,0 +1,40 @@
+cmake_minimum_required(VERSION 3.13)
+cmake_policy(SET CMP0076 NEW)
+
+include(ExternalProject)
+
+project("foliOS-stage0")
+
+set(TARGET "ia32-pc-bios" CACHE STRING "Target triplet (arch-board-firmware)")
+
+string(REPLACE "-" ";" TARGET_TEMP ${TARGET})
+list(LENGTH TARGET_TEMP TARGET_TEMP_LEN)
+if (NOT TARGET_TEMP_LEN EQUAL 3)
+    message(FATAL_ERROR "Invalid target format")
+endif()
+list(GET TARGET_TEMP 0 TARGET_ARCH)
+list(GET TARGET_TEMP 1 TARGET_PLATFORM)
+list(GET TARGET_TEMP 2 TARGET_FIRMWARE)
+unset(TARGET_TEMP)
+unset(TARGET_PLATFORM)
+unset(TARGET_FIRMWARE)
+
+if ("${TARGET_ARCH}" STREQUAL "amd64")
+    set(VELLUM_TARGET_ARCH ia32)
+else()
+    set(VELLUM_TARGET_ARCH "${TARGET_ARCH}")
+endif()
+
+ExternalProject_Add(vellum
+    SOURCE_DIR "${CMAKE_SOURCE_DIR}/vellum"
+    BINARY_DIR "${CMAKE_BINARY_DIR}/vellum"
+    CMAKE_CACHE_ARGS
+        -DCMAKE_MAKE_PROGRAM:FILEPATH=${CMAKE_MAKE_PROGRAM}
+        -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+        -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
+        -DCMAKE_ASM_FLAGS:STRING=${CMAKE_ASM_FLAGS}
+        -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=${CMAKE_EXPORT_COMPILE_COMMANDS}
+        -DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_SOURCE_DIR}/cmake/${VELLUM_TARGET_ARCH}/Toolchain.cmake
+    BUILD_ALWAYS 1
+    INSTALL_COMMAND ""
+)

@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 3.13)
+cmake_policy(SET CMP0076 NEW)
+
+project("vellum-session03" LANGUAGES C ASM)
+
+add_executable(vellum)
+set_target_properties(vellum PROPERTIES SUFFIX ".elf")
+
+target_compile_features(vellum PUBLIC c_std_11)
+target_compile_options(vellum PUBLIC
+    $<$<COMPILE_LANGUAGE:C,ASM>:
+        -Werror
+        -Wall
+        -Wno-unused-function
+    >
+)
+target_link_libraries(vellum gcc)
+
+add_subdirectory(arch/ia32/pc/bios)
