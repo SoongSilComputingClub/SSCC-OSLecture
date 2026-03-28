@@ -249,8 +249,7 @@ read_disk:
 
     add     .bpb_hidden_sectors, %ecx
 
-    mov     %ecx, %eax
-    and     $0x0000FFFF, %eax
+    mov     %cx, %ax
     mov     %ecx, %edx
     shr     $16, %edx
 
