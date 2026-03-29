@@ -122,11 +122,9 @@ _start:
 
     # calc cluster start lba
     movzxw  .bpb_root_entries, %eax
-    mov     $32, %bx
-    mulw    %bx
+    shl     $5, %ax
     add     $0x1FF, %ax
-    mov     $0x200, %bx
-    divw    %bx
+    shr     $9, %ax
     add     .root_dir_lba, %eax
     mov     %eax, .cluster_start_lba
 
