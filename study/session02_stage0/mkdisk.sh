@@ -47,7 +47,10 @@ cp "build/vellum/arch/ia32/pc/bios/mbrboot.bin" "$PART_TABLE_IMAGE"
 dd if=/dev/zero bs=512 count=62 >>"$PART_TABLE_IMAGE"
 cat "$PART_TABLE_IMAGE" "$PART_IMAGE" > "$OUTPUT"
 
-cat <<'EOF' | fdisk -e "$OUTPUT"
+OS_TYPE=$(uname -s)
+
+if [ "$OS_TYPE" = "Darwin" ]; then
+    cat <<'EOF' | fdisk -e "$OUTPUT"
 e 1
 01
 n
@@ -56,5 +59,15 @@ n
 f 1
 q
 EOF
+elif [ "$OS_TYPE" = "Linux" ]; then
+    sfdisk "$OUTPUT" <<EOF
+label: dos
+start=63, size=16443, type=01, bootable
+EOF
+else
+    echo "$0: unsupported operating system ($OS_TYPE)"
+    rm "$PART_TABLE_IMAGE" "$PART_IMAGE"
+    exit 1
+fi
 
 rm "$PART_TABLE_IMAGE" "$PART_IMAGE"

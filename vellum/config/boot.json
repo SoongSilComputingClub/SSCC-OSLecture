@@ -1,6 +1,10 @@
 {
     "timezone": 32400,
     "rtc_utc": true,
+    "start_script": [
+        "vmode 640x480x24",
+        "usefont boot:/unifont.bfn"
+    ],
     "menu": {
         "title": "Boot Menu",
         "timeout": 5,
@@ -24,8 +28,6 @@
                         {   
                             "name": "GUI shell",
                             "script": [
-                                "usefont boot:/unifont.bfn",
-                                "vmode 640x480x24",
                                 "loadmodule boot:/modules/guishell.mod",
                                 "guishell"
                             ]

@@ -46,7 +46,6 @@ switch_r16_to_p32:
 
     .code32
 .pmode:
-
     mov     _ia32_pm32_data_seg, %ax
     mov     %ax, %ds
     mov     %ax, %es
